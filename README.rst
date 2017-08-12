@@ -2,8 +2,8 @@ pytest-nginx
 ============
 
 pytest-nginx is a pytest plugin, that allows you to test code, which requires
-communicating with a web server. Custom fixtures can be made which manage the
-content of the server root directory.
+communicating with a full-fledged web server. Custom fixtures can be made which
+manage the content of the server root directory.
 
 Usage
 =====
@@ -12,6 +12,8 @@ The plugin contains one fixture:
 
 * **nginx_proc** - session scoped fixture, which manages the nginx daemon with
   the most basic configuration for serving static files.
+* **nginx_php_proc** - session scoped fixture, which manages the nginx daemon
+  and the php-fpm daemon, both configured to work together.
 
 All fixtures take the name of a fixture managing the server root directory. In
 the simplest case it is an empty temporary directory managed with the
@@ -54,15 +56,21 @@ settings are handled in the following order:
 +---------------------------+---------------------------+---------------------------+---------------------------+
 | Fixture factory argument  | Command line option       | pytest.ini option         | Default                   |
 +===========================+===========================+===========================+===========================+
-| executable                | --nginx-exec              | nginx_exec                | nginx                     |
-+---------------------------+---------------------------+---------------------------+---------------------------+
-| start_params              | --nginx-start-params      | nginx_start_params        | ""                        |
-+---------------------------+---------------------------+---------------------------+---------------------------+
 | host                      | --nginx-host              | nginx_host                | 127.0.0.1                 |
 +---------------------------+---------------------------+---------------------------+---------------------------+
 | port                      | --nginx-port              | nginx_port                | random                    |
 +---------------------------+---------------------------+---------------------------+---------------------------+
-| config_template           | --nginx-config-template   | nginx_config_template     | auto-generated            |
+| nginx_exec                | --nginx-exec              | nginx_exec                | nginx                     |
++---------------------------+---------------------------+---------------------------+---------------------------+
+| nginx_params              | --nginx-params            | nginx_params              | ""                        |
++---------------------------+---------------------------+---------------------------+---------------------------+
+| nginx_config_template     | --nginx-config-template   | nginx_config_template     | auto-generated            |
++---------------------------+---------------------------+---------------------------+---------------------------+
+| php_fpm_exec              | --php-fpm-exec            | php_fpm_exec              | php-fpm                   |
++---------------------------+---------------------------+---------------------------+---------------------------+
+| php_fpm_params            | --php-fpm-params          | php_fpm_params            | ""                        |
++---------------------------+---------------------------+---------------------------+---------------------------+
+| php_fpm_config_template   | --php-fpm-config-template | php_fpm_config_template   | auto-generated            |
 +---------------------------+---------------------------+---------------------------+---------------------------+
 
 Examples showing how to specify the port number:
