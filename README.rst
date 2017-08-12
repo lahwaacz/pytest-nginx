@@ -69,20 +69,20 @@ Examples showing how to specify the port number:
 
 * Pass it as an argument to the factory function:
 
-    .. code-block:: python
+  .. code-block:: python
 
         nginx_proc = factories.nginx_proc(port=8888)
 
 * Use the ``--nginx-port`` command line option when running pytest:
 
-    .. code-block::
+  .. code-block::
 
         pytest ./tests --nginx-port=8888
 
 
 * Add the ``nginx_port`` option to the ``pytest.ini`` file:
 
-    .. code-block:: ini
+  .. code-block:: ini
 
         [pytest]
         nginx_port = 8888
