@@ -5,8 +5,8 @@ pytest-nginx is a pytest plugin, that allows you to test code, which requires
 communicating with a web server. Custom fixtures can be made which manage the
 content of the server root directory.
 
-How to use
-==========
+Usage
+=====
 
 The plugin contains one fixture:
 
