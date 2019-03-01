@@ -6,7 +6,7 @@ install:
   - pip install -r requirements-test.txt
   - python setup.py install
   - sudo apt-get update
-  - sudo apt-get install -y nginx-full php-fpm
+  - sudo apt-get install -y nginx-full php5-fpm
 
 script:
   - pytest
