@@ -38,3 +38,10 @@ def test_php_hello_world(nginx_php_hello_world):
     response = requests.get(url)
     assert response.status_code == 200
     assert response.text == "Hello world! This is pytest-nginx, serving PHP!"
+
+
+nginx_bad_config_proc = factories.nginx_proc("nginx_server_root", config_template=__file__)
+
+def test_borked_config(request):
+    with pytest.raises(RuntimeError):
+        request.getfixturevalue("nginx_bad_config_proc")

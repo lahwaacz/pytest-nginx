@@ -179,9 +179,9 @@ def daemon(cmd, **popen_args):
         # stop the daemon
         proc.terminate()
         try:
-            proc.wait(timeout=10)
+           proc.wait(timeout=10)
         except TimeoutError:
-            proc.kill()
+           proc.kill()
 
         # check errors
         code = proc.poll()
@@ -200,8 +200,17 @@ def get_random_port(host=""):
         s.bind((host, 0))
         return s.getsockname()[1]
 
-def wait_for_socket(host, port, timeout=10, timeout_inner=0.1):
+def wait_for_socket_check_processes(host, port, processes, timeout=10, timeout_inner=0.1):
     def check():
+        # Check if processes are running
+        for proc in processes:
+            if proc.poll() is not None:
+                raise RuntimeError(
+                    f'While starting pytest-nginx processes, command "{proc.args}" '
+                    f'died with runtime error {proc.poll()}. '
+                    f'Stderr: {proc.communicate()}')
+
+        # Check if socket ready
         s = socket.socket()
         with contextlib.closing(s):
             try:
@@ -214,6 +223,10 @@ def wait_for_socket(host, port, timeout=10, timeout_inner=0.1):
         time.sleep(timeout_inner)
     if slept == timeout:
         raise TimeoutError("Could not bind to socket ({}, {}).".format(host, port))
+
+def wait_for_socket(host, port, timeout=10, timeout_inner=0.1):
+    """For backwards compatibility. """
+    return wait_for_socket_check_processes(host, port, timeout=timeout, timeout_inner=timeout_inner, processes=[])
 
 def get_username():
     """Return the user name of the current process."""
@@ -273,7 +286,7 @@ def nginx_proc(server_root_fixture_name, host=None, port=None,
                     stderr=subprocess.PIPE,
                     universal_newlines=True,
                 ) as proc:
-            wait_for_socket(host, port)
+            wait_for_socket_check_processes(host, port, [proc])
             yield NginxProcess(host, port, server_root)
 
     return nginx_proc_fixture
@@ -345,7 +358,7 @@ def nginx_php_proc(server_root_fixture_name, host=None, port=None,
                         stderr=subprocess.PIPE,
                         universal_newlines=True,
                     ) as nginx_proc:
-                wait_for_socket(host, port)
+                wait_for_socket_check_processes(host, port, processes=[php_fpm_proc, nginx_proc])
                 yield NginxProcess(host, port, server_root)
 
     return nginx_proc_fixture
