@@ -173,20 +173,22 @@ def daemon(cmd, **popen_args):
         if code is not None and code != 0:
             raise subprocess.CalledProcessError(returncode=code, cmd=cmd, output=proc.stdout, stderr=proc.stderr)
 
-        # yield the process to the caller
-        yield proc
-
-        # stop the daemon
-        proc.terminate()
         try:
-            proc.wait(timeout=10)
-        except TimeoutError:
-            proc.kill()
+            # yield the process to the caller
+            yield proc
 
-        # check errors
-        code = proc.poll()
-        if code != 0:
-            raise subprocess.CalledProcessError(returncode=code, cmd=cmd, output=proc.stdout, stderr=proc.stderr)
+        finally:
+            # stop the daemon
+            proc.terminate()
+            try:
+                proc.wait(timeout=10)
+            except TimeoutError:
+                proc.kill()
+
+            # check errors
+            code = proc.poll()
+            if code != 0:
+                raise subprocess.CalledProcessError(returncode=code, cmd=cmd, output=proc.stdout, stderr=proc.stderr)
 
 class NginxProcess:
     def __init__(self, host, port, server_root):
