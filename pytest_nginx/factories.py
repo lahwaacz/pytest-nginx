@@ -255,7 +255,7 @@ def nginx_proc(server_root_fixture_name, host=None, port=None,
         host = host or get_option('nginx_host')
         port = port or get_option('nginx_port')
         if not port:
-            port = get_random_port(port)
+            port = get_random_port(host)
         nginx_exec = nginx_exec or get_option('nginx_exec')
         nginx_params = nginx_params or get_option('nginx_params')
         config_template = config_template or get_option('nginx_config_template')
@@ -314,7 +314,7 @@ def nginx_php_proc(server_root_fixture_name, host=None, port=None,
         host = host or get_option('nginx_host')
         port = port or get_option('nginx_port')
         if not port:
-            port = get_random_port(port)
+            port = get_random_port(host)
         nginx_exec = nginx_exec or get_option('nginx_exec')
         php_fpm_exec = php_fpm_exec or get_option('php_fpm_exec')
         nginx_params = nginx_params or get_option('nginx_params')
