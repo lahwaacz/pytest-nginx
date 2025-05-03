@@ -16,7 +16,7 @@ setup_requires = [
 
 setup(
     name='pytest-nginx',
-    version='1.1',
+    version='1.2',
     description='nginx fixture for pytest',
     long_description=(open('README.rst').read()),
     keywords='tests py.test pytest fixture nginx',
